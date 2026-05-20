@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calcul moyenne - ESG2E</title>
+
+<style>
+/* تعيين الصورة كخلفية كاملة وثابتة للموقع باستخدام التشفير البرمجي المباشر */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 40px 20px;
+    margin: 0;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect width="100%" height="100%" fill="%23003366"/><radialGradient id="g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="%230052a3"/><stop offset="100%" stop-color="%23001a33"/></radialGradient><rect width="100%" height="100%" fill="url(%23g)" opacity="0.7"/></svg>') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    position: relative;
+}
+
+/* إضافة طبقة حماية جمالية لضمان وضوح النصوص فوق الخلفية الزرقاء */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(10, 25, 47, 0.4), rgba(0, 53, 102, 0.4));
+    z-index: -1;
+}
+
+/* تصميم حاوية زجاجية شفافة لتندمج مع الخلفية الفخمة */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 40px 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+h3 {
+    text-align: center;
+    color: #ffffff;
+    margin-top: 0;
+    font-size: 28px;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    letter-spacing: 1px;
+}
+
+/* تنسيق الجدول الزجاجي */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.25);
+}
+
+th, td {
+    padding: 14px 10px;
+    text-align: center;
+}
+
+th {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 1px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+tr:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    transition: background 0.2s ease;
+}
+
+td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    color: #e0e0e0;
+    font-size: 15px;
+}
+
+/* خانات الإدخال متناسقة مع الخلفية الداكنة */
+input {
+    width: 65px;
+    font-size: 14px;
+    padding: 6px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 6px;
+    text-align: center;
+    outline: none;
+    transition: all 0.2s ease;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #111;
+    font-weight: bold;
+}
+
+input:focus {
+    border-color: #3498db;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+}
+
+/* تمييز خانة معدل المادة بلون مريح ومضيء */
+.subject_avg {
+    font-weight: bold;
+    color: #2ed573;
+    background-color: rgba(46, 213, 115, 0.15);
+    border: 1px solid rgba(46, 213, 115, 0.3);
+    border-radius: 6px;
+    padding: 4px 10px;
+    display: inline-block;
+    min-width: 45px;
+}
+
+/* زر الحساب بتصميم عصري ملائم */
+button {
+    display: block;
+    margin: 30px auto 10px auto;
+    padding: 14px 40px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #2980b9, #1f6391);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(41, 128, 185, 0.6);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* لوحة عرض المعدل العام النهائي */
+#result {
+    margin-top: 30px;
+    padding: 18px;
+    background-color: rgba(30, 136, 229, 0.2);
+    color: #e3f2fd;
+    border-radius: 10px;
+    font-size: 24px;
+    border-left: 5px solid #1e88e5;
+    border-right: 1px solid rgba(30, 136, 229, 0.3);
+    border-top: 1px solid rgba(30, 136, 229, 0.3);
+    border-bottom: 1px solid rgba(30, 136, 229, 0.3);
+    text-align: center;
+    display: none;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* توقيع المطور إسلام */
+.footer-credits {
+    text-align: center;
+    color: #b2bec3;
+    font-size: 13px;
+    margin-top: 40px;
+    font-weight: 500;
+}
+
+.footer-credits span {
+    color: #e74c3c;
+}
+
+/* تجاوب التصميم مع الهواتف الذكية */
+@media (max-width:600px){
+    body { padding: 15px 10px; }
+    .container { padding: 20px 15px; }
+    table { font-size: 12px; }
+    th, td { padding: 10px 4px; }
+    th { font-size: 11px; }
+    input { width: 48px; font-size: 12px; padding: 4px; }
+    #result { font-size: 20px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h3>Calcul de la moyenne</h3>
+
+    <table>
+    <tr>
+    <th>Matière</th>
+    <th>Coef</th>
+    <th>Examen</th>
+    <th>TD</th>
+    <th>TP</th>
+    <th>Moyenne</th>
+    </tr>
+
+    <tr>
+    <td>Analyse</td>
+    <td>5</td>
+    <td><input id="ana_exam" type="number" step="0.01" min="0" max="20"></td>
+    <td><input id="ana_td" type="number" step="0.01" min="0" max="20"></td>
+    <td>—</td>
+    <td><span class="subject_avg">0.00</span></td>
+    </tr>
+
+    <tr>
+    <td>Physique</td>
+    <td>5</td>
+    <td><input id="phy_exam" type="number" step="0.01" min="0" max="20"></td>
+    <td><input id="phy_td" type="number" step="0.01" min="0" max="20"></td>
+    <td><input id="phy_tp" type="number" step="0.01" min="0" max="20"></td>
+    <td><span class="subject_avg">0.00</span></td>
+    </tr>
+
+    <tr>
+    <td>Chimie</td>
+    <td>5</td>
+    <td><input id="chim_exam" type="number" step="0.01" min="0" max="20"></td>
+    <td><input id="chim_td" type="number" step="0.01" min="0" max="20"></td>
+    <td><input id="chim_tp" type="number" step="0.01" min="0" max="20"></td>
+    <td><span class="subject_avg">0.00</span></td>
+    </tr>
+
+    <tr>
+    <td>Algèbre</td>
+    <td>4</td>
+    <td><input id="alg_exam" type="number" step="0.01" min="0" max="20"></td>
+    <td><input id="alg_td" type="number" step="0.01" min="0" max="20"></td>
+    <td>—</td>
+    <td><span class="subject_avg">0.00</span></td>
+    </tr>
+
+    <tr>
+    <td>Informatique</td>
+    <td>3</td>
+    <td><input id="info_exam" type="number" step="0.01" min="0" max="20"></td>
+    <td><input id="info_td" type="number" step="0.01" min="0" max="20"></td>
+    <td>—</td>
+    <td><span class="subject_avg">0.00</span></td>
+    </tr>
+
+    <tr>
+    <td>PROBABILITÉ</td>
+    <td>3</td>
+    <td><input id="stat_exam" type="number" step="0.01" min="0" max="20"></td>
+    <td><input id="stat_td" type="number" step="0.01" min="0" max="20"></td>
+    <td>—</td>
+    <td><span class="subject_avg">0.00</span></td>
+    </tr>
+
+    <tr>
+    <td>IH</td>
+    <td>1</td>
+    <td><input id="ih_exam" type="number" step="0.01" min="0" max="20"></td>
+    <td><input id="ih_td" type="number" step="0.01" min="0" max="20"></td>
+    <td>—</td>
+    <td><span class="subject_avg">0.00</span></td>
+    </tr>
+
+    <tr>
+    <td>Eco</td>
+    <td>1</td>
+    <td><input id="eco_exam" type="number" step="0.01" min="0" max="20"></td>
+    <td><input id="eco_td" type="number" step="0.01" min="0" max="20"></td>
+    <td>—</td>
+    <td><span class="subject_avg">0.00</span></td>
+    </tr>
+
+    <tr>
+    <td>CAO</td>
+    <td>1</td>
+    <td><input id="draw_exam" type="number" step="0.01" min="0" max="20"></td>
+    <td><input id="draw_td" type="number" step="0.01" min="0" max="20"></td>
+    <td>—</td>
+    <td><span class="subject_avg">0.00</span></td>
+    </tr>
+
+    <tr>
+    <td>Anglais</td>
+    <td>1</td>
+    <td><input id="eng_exam" type="number" step="0.01" min="0" max="20"></td>
+    <td><input id="eng_td" type="number" step="0.01" min="0" max="20"></td>
+    <td>—</td>
+    <td><span class="subject_avg">0.00</span></td>
+    </tr>
+
+    <tr>
+    <td>Français</td>
+    <td>1</td>
+    <td><input id="fr_exam" type="number" step="0.01" min="0" max="20"></td>
+    <td><input id="fr_td" type="number" step="0.01" min="0" max="20"></td>
+    <td>—</td>
+    <td><span class="subject_avg">0.00</span></td>
+    </tr>
+
+    </table>
+
+    <button onclick="calc()">Calculer</button>
+
+    <h3 id="result"></h3>
+
+    <p class="footer-credits">
+          BY <strong>B1 02</strong>
+    </p>
+
+</div>
+
+<script>
+function v(id){
+    let x = document.getElementById(id).value;
+    return x === "" ? 0 : parseFloat(x);
+}
+
+function calc(){
+    let avgs = document.getElementsByClassName("subject_avg");
+
+    let total = 0;
+    let coef = 0;
+
+    function normal(ex, td){
+        return (ex * 0.6) + (td * 0.4);
+    }
+
+    function phy_chim(ex, td, tp){
+        return (ex * 0.6) + (td * 0.2) + (tp * 0.2);
+    }
+
+    // 1. Analyse
+    let ana = normal(v("ana_exam"), v("ana_td"));
+    avgs[0].innerText = ana.toFixed(2);
+    total += ana * 5; coef += 5;
+
+    // 2. Physique
+    let phy = phy_chim(v("phy_exam"), v("phy_td"), v("phy_tp"));
+    avgs[1].innerText = phy.toFixed(2);
+    total += phy * 5; coef += 5;
+
+    // 3. Chimie
+    let chim = phy_chim(v("chim_exam"), v("chim_td"), v("chim_tp"));
+    avgs[2].innerText = chim.toFixed(2);
+    total += chim * 5; coef += 5;
+
+    // 4. Algèbre
+    let alg = normal(v("alg_exam"), v("alg_td"));
+    avgs[3].innerText = alg.toFixed(2);
+    total += alg * 4; coef += 4;
+
+    // 5. Informatique
+    let info = normal(v("info_exam"), v("info_td"));
+    avgs[4].innerText = info.toFixed(2);
+    total += info * 3; coef += 3;
+
+    // 6. PROBABILITÉ
+    let stat = normal(v("stat_exam"), v("stat_td"));
+    avgs[5].innerText = stat.toFixed(2);
+    total += stat * 3; coef += 3;
+
+    // 7. IH
+    let ih = normal(v("ih_exam"), v("ih_td"));
+    avgs[6].innerText = ih.toFixed(2);
+    total += ih * 1; coef += 1;
+
+    // 8. Eco
+    let eco = normal(v("eco_exam"), v("eco_td"));
+    avgs[7].innerText = eco.toFixed(2);
+    total += eco * 1; coef += 1;
+
+    // 9. CAO
+    let draw = normal(v("draw_exam"), v("draw_td"));
+    avgs[8].innerText = draw.toFixed(2);
+    total += draw * 1; coef += 1;
+
+    // 10. Anglais
+    let eng = normal(v("eng_exam"), v("eng_td"));
+    avgs[9].innerText = eng.toFixed(2);
+    total += eng * 1; coef += 1;
+
+    // 11. Français
+    let fr = normal(v("fr_exam"), v("fr_td"));
+    avgs[10].innerText = fr.toFixed(2);
+    total += fr * 1; coef += 1;
+
+    let avg = total / coef;
+
+    let resultElement = document.getElementById("result");
+    resultElement.innerText = "Moyenne générale = " + avg.toFixed(2);
+    resultElement.style.display = "block";
+}
+</script>
+
+</body>
+</html>
